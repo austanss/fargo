@@ -1,16 +1,18 @@
 #pragma once
 #include <string>
+#include <memory>
+#include "exec/context.hh"
 
 namespace fargo {
 
-    class Simulation {
+    class SimulationHandle {
 
     public:
         // Constructor
-        Simulation(const std::string &name);
+        SimulationHandle(const std::string &name);
 
         // Destructor
-        ~Simulation();
+        ~SimulationHandle();
 
         // Member functions
         void reset(bool should_display);
@@ -27,10 +29,15 @@ namespace fargo {
         void* window;
         unsigned int* buffer;
 
+        std::unique_ptr<SimulationContext> context;
+
         // Internal functions
         void display_create();
         void display_destroy();
         void display_update();
+
+        void data_update();
+
     };
 
 }

@@ -8,16 +8,17 @@ static constexpr uint32_t DISPLAY_FLAGS = 0x00;
 
 using namespace fargo;
 
-Simulation::Simulation(const std::string &name) : moniker(name) {
+SimulationHandle::SimulationHandle(const std::string &name) : moniker(name) {
     fresh = true;
     displayed = false;
+    context = nullptr;
 }
 
-Simulation::~Simulation() {
+SimulationHandle::~SimulationHandle() {
     // Nothing to do here
 }
 
-void Simulation::reset(bool should_display) {
+void SimulationHandle::reset(bool should_display) {
     if (displayed) {
         this->display_destroy();
     }
@@ -25,24 +26,33 @@ void Simulation::reset(bool should_display) {
     if (should_display) {
         this->display_create();
     }
+
+    if (!!context) {
+        context.release();
+    }
+    context = std::make_unique<SimulationContext>();
+
     fresh = false;
 }
 
-void Simulation::tick() {
+// Ticks one day
+void SimulationHandle::tick() {
     if (fresh) {
         throw new std::runtime_error("Simulation not initialized");
     }
+
+    this->data_update();
 
     if (displayed) {
         this->display_update();
     }
 }
 
-bool Simulation::is_valid() {
+bool SimulationHandle::is_valid() {
     return !!window && !!buffer;
 }
 
-void Simulation::display_create() {
+void SimulationHandle::display_create() {
     std::string title = "Fargo - " + this->moniker;
     struct mfb_window *m_window = mfb_open_ex(title.c_str(), DISPLAY_SIZE_X, DISPLAY_SIZE_Y, DISPLAY_FLAGS);
     if (!m_window) {
@@ -58,7 +68,7 @@ void Simulation::display_create() {
     this->window = (void *)m_window;
 }
 
-void Simulation::display_destroy() {
+void SimulationHandle::display_destroy() {
     if (window && displayed) {
         mfb_close((struct mfb_window *)this->window);
         this->window = nullptr;
@@ -66,12 +76,17 @@ void Simulation::display_destroy() {
     }
 }
 
-void Simulation::display_update() {
-    if (window && displayed) {
-        int state = mfb_update_ex((struct mfb_window *)window, buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
-        if (state < 0) {
-            mfb_close((struct mfb_window *)window);
-            window = nullptr;
-        }
+void SimulationHandle::display_update() {
+    if (!displayed)
+        throw new std::runtime_error("Simulation not displayable yet attempted update");
+    
+    int state = mfb_update_ex((struct mfb_window *)window, buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
+    if (state < 0) {
+        mfb_close((struct mfb_window *)window);
+        window = nullptr;
     }
+}
+
+void SimulationHandle::data_update() {
+    // Placeholder for now
 }
