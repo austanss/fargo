@@ -1,21 +1,15 @@
-#include <iostream>
+#include <memory>
 #include <minifb/minifb.h>
+#include "exec/simulation.hh"
+
+using namespace fargo;
 
 int main() {
-    struct mfb_window *window = mfb_open_ex("fargo", 800, 600, 0x00);
-    if (!window)
-        return 0;
+    std::unique_ptr<Simulation> sim_main = std::make_unique<Simulation>("Main");
 
-    uint32_t *buffer = (uint32_t *)malloc(800 * 600 * 4);
+    sim_main->reset(true);
 
-    do {
-        int state;
-
-        state = mfb_update_ex(window, buffer, 800, 600);
-
-        if (state < 0) {
-            window = nullptr;
-            break;
-        }
-    } while(mfb_wait_sync(window));
+    while (sim_main->is_valid()) {
+        sim_main->tick();
+    }
 }
