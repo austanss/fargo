@@ -23,13 +23,12 @@ namespace fargo {
         } metadata;
 
         struct {
-
-        } population;
-
-        struct {
             unsigned long   current_day;
         } chronology;
 
+        void *population;
+
+        void population_refresh(unsigned long new_size);
     };
 
 }

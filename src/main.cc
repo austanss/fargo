@@ -1,7 +1,7 @@
-#include <memory>
-#include <minifb/minifb.h>
 #include "exec/simulation.hh"
 #include "data/individual.hh"
+#include <memory>
+#include <minifb/minifb.h>
 
 using namespace fargo;
 

@@ -13,7 +13,8 @@ namespace fargo {
 
         struct {
             unsigned long   uid;
-            unsigned long   age_years;
+            unsigned long   index;
+            unsigned long   age_days;
 
             struct {
                 unsigned long   value_funds;
@@ -22,12 +23,9 @@ namespace fargo {
                 unsigned long   welfare_annual;
             } finances;
 
-            bool            unassisted;
-            bool            wealthy;
-            bool            handicapped;
-            bool            unemployed;
-
             struct {
+                bool            unassisted;
+                bool            handicapped;
                 bool            ssdi_applied;
                 bool            sssi_applied;
                 bool            unem_applied;

@@ -20,7 +20,8 @@ CCFLAGS = \
 -fpie \
 -gdwarf \
 -Werror \
--pedantic
+-pedantic #\
+-02 \
 
 LDFLAGS = \
 -pie	\

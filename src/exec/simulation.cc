@@ -1,10 +1,7 @@
+#include "constants.hh"
+#include "exec/simulation.hh"
 #include <iostream>
 #include <minifb/minifb.h>
-#include "exec/simulation.hh"
-
-static constexpr uint32_t DISPLAY_SIZE_X = 800;
-static constexpr uint32_t DISPLAY_SIZE_Y = 600;
-static constexpr uint32_t DISPLAY_FLAGS = 0x00;
 
 using namespace fargo;
 
@@ -31,6 +28,7 @@ void SimulationHandle::reset(bool should_display) {
         context.release();
     }
     context = std::make_unique<SimulationContext>();
+    context->population_refresh(420);
 
     fresh = false;
 }
@@ -76,6 +74,7 @@ void SimulationHandle::display_destroy() {
     }
 }
 
+extern void redraw(uint32_t *buffer);
 void SimulationHandle::display_update() {
     if (!displayed)
         throw new std::runtime_error("Simulation not displayable yet attempted update");
@@ -85,6 +84,10 @@ void SimulationHandle::display_update() {
         mfb_close((struct mfb_window *)window);
         window = nullptr;
     }
+
+    redraw(buffer);
+    
+    mfb_wait_sync((struct mfb_window *)window);
 }
 
 void SimulationHandle::data_update() {

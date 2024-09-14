@@ -1,4 +1,5 @@
 #include "exec/context.hh"
+#include "data/population.hh"
 
 using namespace fargo;
 
@@ -11,11 +12,20 @@ SimulationContext::SimulationContext() {
     metadata.welfare_count = 0;
     metadata.total_count = 0;
 
-    population = {};
-    
+    this->population = (void *)new Population();
+
     chronology.current_day = 0;
 }
 
 SimulationContext::~SimulationContext() {
-    // Nothing to do here
+    delete (Population *)this->population;
+}
+
+void SimulationContext::population_refresh(unsigned long new_size) {
+    Population *pop = new Population();
+    while (pop->size() < new_size) {
+        pop->new_individual();
+    }
+    delete (Population *)this->population;
+    this->population = (void *)pop;
 }
