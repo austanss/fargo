@@ -22,17 +22,17 @@ namespace fargo {
 
     };
 
-    template <typename T>
+    template <typename Treturn>
     class Response 
     {
     public:
-        Response() : status(Status::FLAWLESS), value(T()) {}
-        Response(const Status status, const T& value) : status(status), value(value) {}
-        Response(const Response<T>& other) : status(other.status), value(other.value) {}
+        Response() : status(Status::FLAWLESS), value(Treturn()) {}
+        Response(const Status status, const Treturn& value) : status(status), value(value) {}
+        Response(const Response<Treturn>& other) : status(other.status), value(other.value) {}
         ~Response() {}
 
         Status status;
-        T value;
+        Treturn value;
     };
 
     // Specialization for void

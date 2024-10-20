@@ -4,7 +4,7 @@
 
 using namespace fargo;
 
-int main() 
+int main(int argc, char** argv) 
 {
     const std::string primary_label = "Simulation";
     std::unique_ptr<Simulation> sim = std::make_unique<Simulation>(true, primary_label);
