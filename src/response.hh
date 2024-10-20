@@ -14,7 +14,7 @@ namespace fargo {
         ERROR_FAILED_INIT   = 8,
     };
 
-    class StatusChecker 
+    class StatusValidator 
     {
 
     public:
@@ -26,13 +26,13 @@ namespace fargo {
     class Response 
     {
     public:
-        Response() : status(Status::FLAWLESS), value(Treturn()) {}
-        Response(const Status status, const Treturn& value) : status(status), value(value) {}
-        Response(const Response<Treturn>& other) : status(other.status), value(other.value) {}
+        Response() : status(Status::FLAWLESS), result(Treturn()) {}
+        Response(const Status status, const Treturn& value) : status(status), result(value) {}
+        Response(const Response<Treturn>& other) : status(other.status), result(other.result) {}
         ~Response() {}
 
         Status status;
-        Treturn value;
+        Treturn result;
     };
 
     // Specialization for void

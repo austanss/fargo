@@ -77,7 +77,7 @@ Response<void> Visualizer::reset(const std::string& window_title)
     return Response<void>(current_status);
 }
 
-Response<void> Visualizer::update()
+Response<void> Visualizer::update_with(const PopulationData& pop_data)
 {
     if (!VISUALIZER_SHOULD_WORK) {
         return Responses::quiet_failure();
