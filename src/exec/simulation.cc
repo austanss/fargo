@@ -36,7 +36,7 @@ Response<void> Simulation::reset()
     }
 
     if (this->currently.is_graphical) {
-        latest_status = this->canvas->update_with(this->population->reference_data()).status;
+        latest_status = this->canvas->reset(this->label).status;
         if (StatusValidator::indicates_intervention(latest_status)) {
             this->currently.is_graphical = false;
             latest_status = this->canvas->cancel().status;
@@ -77,6 +77,8 @@ Response<void> Simulation::update()
         this->currently.is_running = false;
         return Response<void>(latest_status);
     }
+
+    this->currently.month_tick++;
 
     return latest_status;
 }

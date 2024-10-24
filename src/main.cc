@@ -22,14 +22,11 @@ int main(int argc, char** argv)
             std::cout << "Simulation '" << sim->get_label() << "' ended with status " << latest_status << "." << std::endl;
         }
 
-        std::cout << '\b' << tick_indicator++;
+        std::cout << "\b" << tick_indicator++;
         if (tick_indicator > 9) {
             tick_indicator = 0;
         }
     }
-
-    // Redundant reassurance
-    sim.reset();
 
     return 0;
 }
