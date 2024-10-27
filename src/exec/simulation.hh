@@ -32,6 +32,8 @@ namespace fargo
         
         std::unique_ptr<Population> population;
         std::unique_ptr<Visualizer> canvas;
+
+        void visual_thread();
     };
 
 }
