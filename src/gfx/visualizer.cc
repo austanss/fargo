@@ -9,6 +9,7 @@ Visualizer::Visualizer()
     this->window = nullptr;
     this->buffer = nullptr;
     this->title = "Untitled";
+    this->text_renderer = std::make_unique<TextRenderer>();
 }
 
 Visualizer::~Visualizer() 
@@ -39,6 +40,7 @@ Response<void> Visualizer::reset_mfb()
     if (mfb_window == nullptr) {
         return Response<void>(Status::ERROR_FAILED_INIT);
     }
+    this->window = (void *)mfb_window;
 
     this->buffer = new unsigned int[DISPLAY_SIZE_X * DISPLAY_SIZE_Y];
     if (this->buffer == nullptr) {
@@ -73,6 +75,22 @@ Response<void> Visualizer::reset(const std::string& window_title)
     }
 
     current_status = this->reset_mfb().status;
+    if (StatusValidator::indicates_intervention(current_status)) {
+        return Response<void>(current_status);
+    }
+
+    this->text_renderer->unregister_font();
+    this->text_renderer->unregister_framebuffer();
+
+    current_status = this->text_renderer->register_framebuffer(this->buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y).status;
+    if (StatusValidator::indicates_intervention(current_status)) {
+        return Response<void>(current_status);
+    }
+
+    current_status = this->text_renderer->register_font(DEFAULT_FONT_FILENAME).status;
+    if (StatusValidator::indicates_intervention(current_status)) {
+        return Response<void>(current_status);
+    }
 
     return Response<void>(current_status);
 }

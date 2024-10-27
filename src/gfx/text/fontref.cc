@@ -10,14 +10,11 @@ FontReference::FontReference() {
 }
 
 FontReference::~FontReference() {
-    if (font_data != nullptr) {
-        delete[] font_data;
-    }
+    // Hay nada que hacer
 }
 
 Response<FontReference> FontReference::load_font(const std::string& file_name) {
     // Load the font data from the file path
-    // (how?)
     FontReference font_return = FontReference();
     font_return.file_path = file_name;
 
@@ -28,14 +25,15 @@ Response<FontReference> FontReference::load_font(const std::string& file_name) {
     }
 
     font_size = (font_size / 0x1000 + 1) * 0x1000; // Align the font size to the nearest 4KB boundary
-    font_return.font_data = new unsigned char[font_size]; // Allocate memory for the font data
+    font_return.font_data = std::make_shared<std::vector<unsigned char>>(font_size); // Allocate memory for the font data
     
     if (font_return.font_data == nullptr) {
         return Response<FontReference>(Status::ERROR_MISALLOCATION, font_return);
     }
 
     std::ifstream font_in = std::ifstream(font_fs_path, std::ios::in | std::ios::binary);
-    font_in.read((char*)font_return.font_data, 0); // Read the font data from the file
+    font_in.read((char*)font_return.get_font_data(), 0); // Read the font data from the file
+    font_in.close();
 
     return Response<FontReference>(Status::FLAWLESS, font_return);
 }

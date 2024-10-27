@@ -1,7 +1,9 @@
 #pragma once
-#include "response.hh"
 #include "data/population.hh"
+#include "gfx/text/renderer.hh"
+#include "response.hh"
 #include <string>
+#include <memory>
 
 namespace fargo 
 {
@@ -25,6 +27,7 @@ namespace fargo
         void destroy_data();
         Response<void> reset_mfb();
         Response<void> update_mfb();
+        std::unique_ptr<TextRenderer> text_renderer;
 
     };
 
