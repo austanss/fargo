@@ -33,10 +33,6 @@
 
 #define SSFN_VERSION 0x0200
 
-////////////////////////
-#define SSFN_IMPLEMENTATION
-////////////////////////
-
 #ifdef  __cplusplus
 extern "C" {
 # ifndef __THROW

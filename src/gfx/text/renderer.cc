@@ -1,22 +1,19 @@
+#define SSFN_IMPLEMENTATION
 #include "gfx/text/renderer.hh"
-#include <ssfn2/ssfn.h>
 
 using namespace fargo;
 
-ssfn_t ssfn_ctx;
-ssfn_buf_t ssfn_buf;
-
 TextRenderer::TextRenderer() {
-    font = FontReference::null();
-    framebuffer = nullptr;
-    framebuffer_width = 0;
-    framebuffer_height = 0;
-    font_width = 0;
-    font_height = 0;
-    text_width = 0;
-    text_height = 0;
-    ssfn_ctx = { 0 };
-    ssfn_buf = { 0 };
+    this->font = FontReference::null();
+    this->framebuffer = nullptr;
+    this->framebuffer_width = 0;
+    this->framebuffer_height = 0;
+    this->font_width = 0;
+    this->font_height = 0;
+    this->text_width = 0;
+    this->text_height = 0;
+    this->ssfn_ctx = { 0 };
+    this->ssfn_buf = { 0 };
 }
 
 TextRenderer::~TextRenderer() {
@@ -71,7 +68,7 @@ Response<void> TextRenderer::register_font(const std::string& font_file_name) {
     this->font = font_response.result;
 
     ssfn_load(&ssfn_ctx, font.get_font_data());
-    ssfn_select(&ssfn_ctx, SSFN_FAMILY_ANY, nullptr, SSFN_STYLE_REGULAR, 128);
+    ssfn_select(&ssfn_ctx, SSFN_FAMILY_ANY, nullptr, SSFN_STYLE_REGULAR, 64);
 
     return Responses::flawless();
 }

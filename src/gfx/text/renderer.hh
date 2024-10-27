@@ -1,6 +1,7 @@
 #pragma once
-#include "response.hh"
 #include "gfx/text/fontref.hh"
+#include "response.hh"
+#include <ssfn2/ssfn.h>
 
 namespace fargo
 {
@@ -37,6 +38,8 @@ namespace fargo
         unsigned int font_height;
         unsigned int text_width;
         unsigned int text_height;
+        ssfn_t ssfn_ctx;
+        ssfn_buf_t ssfn_buf;
 
     };
 }
