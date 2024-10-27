@@ -50,8 +50,14 @@ Response<void> Visualizer::reset_mfb()
     return Responses::flawless();
 }
 
+static bool already = false;
+
 Response<void> Visualizer::update_mfb()
 {
+    if (!already) {
+        this->text_renderer->render_putc('A', 1, 1);
+        already = true;
+    }
     mfb_wait_sync((struct mfb_window *)this->window);
     int mfb_status = mfb_update_ex((struct mfb_window *)this->window, (void *)this->buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
     if (mfb_status < 0) {

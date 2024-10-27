@@ -33,6 +33,10 @@
 
 #define SSFN_VERSION 0x0200
 
+////////////////////////
+#define SSFN_IMPLEMENTATION
+////////////////////////
+
 #ifdef  __cplusplus
 extern "C" {
 # ifndef __THROW
@@ -602,7 +606,6 @@ static int _ssfn__zexpand(_ssfn__zbuf *z, char *zout)
    unsigned int cur, limit;
 #ifdef __GNUC__
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuse-after-free"
 #endif
    z->zout = zout; cur = (unsigned int) (z->zout - z->zout_start); limit = (unsigned int) (z->zout_end - z->zout_start);
    if(limit == 8) { if(z->zout_start[0] != 'S' || z->zout_start[1] != 'F' || z->zout_start[2] != 'N') return 0; limit = *((uint32_t*)&z->zout_start[4]); } else return 0;

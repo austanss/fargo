@@ -16,7 +16,7 @@ LD 	= clang++
 CCFLAGS = \
 -I$(SOURCE) \
 -I$(INCLUDE) \
--std=c++17 \
+-std=c++20 \
 -fpie \
 -gdwarf \
 -Werror \

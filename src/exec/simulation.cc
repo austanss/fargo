@@ -42,6 +42,7 @@ Response<void> Simulation::reset()
     if (VISUALIZER_MULTITHREAD) {
         std::thread visualizer_thread(&Simulation::visual_thread, this);
         visualizer_thread.detach();
+        std::cout << "Spawned visualizer thread for simulation \"" << this->label << "\"." << std::endl;
     }
     else {
         if (this->currently.is_graphical) {
