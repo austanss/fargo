@@ -12,7 +12,8 @@ namespace fargo {
         ERROR_STATE_CORRUPT = 6,
         ERROR_MISALLOCATION = 7,
         ERROR_FAILED_INIT   = 8,
-        ERROR_OUT_OF_TIME   = 9
+        ERROR_OUT_OF_TIME   = 9,
+        ERROR_FILE_404      = 10,
     };
 
     class StatusValidator 

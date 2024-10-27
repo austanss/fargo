@@ -2,6 +2,8 @@
 #include <iostream>
 #include <memory>
 
+#include "gfx/text/fontref.hh"
+
 using namespace fargo;
 
 int main(int argc, char** argv) 
@@ -13,7 +15,7 @@ int main(int argc, char** argv)
     // Used to externally observe if the loop is hung up
     int tick_indicator = 0;
     std::cout << "Tick evidence: " << tick_indicator;
-    
+
     bool running = true;
     while (running) {
         Status latest_status = sim->update().status;
