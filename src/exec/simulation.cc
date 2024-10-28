@@ -9,7 +9,7 @@ using namespace fargo;
 Simulation::Simulation(const bool start_graphic, const std::string& new_label)
 {
     this->currently.is_running = false;
-    this->currently.is_graphical = (bool)start_graphic;
+    this->currently.is_graphical = (bool)(start_graphic && VISUALIZER_SHOULD_WORK);
     this->label = std::string(new_label);
 
     if (this->currently.is_graphical) {
@@ -39,13 +39,13 @@ Response<void> Simulation::reset()
         return Response<void>(latest_status);
     }
 
-    if (VISUALIZER_MULTITHREAD) {
-        std::thread visualizer_thread(&Simulation::visual_thread, this);
-        visualizer_thread.detach();
-        std::cout << "Spawned visualizer thread for simulation \"" << this->label << "\"." << std::endl;
-    }
-    else {
-        if (this->currently.is_graphical) {
+    if (this->currently.is_graphical) {
+        if (VISUALIZER_MULTITHREAD) {
+            std::thread visualizer_thread(&Simulation::visual_thread, this);
+            visualizer_thread.detach();
+            std::cout << "Spawned visualizer thread for simulation \"" << this->label << "\"." << std::endl;
+        }
+        else {
             latest_status = this->canvas->reset(this->label).status;
             if (StatusValidator::indicates_intervention(latest_status)) {
                 this->currently.is_graphical = false;
