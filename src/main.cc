@@ -2,8 +2,6 @@
 #include <iostream>
 #include <memory>
 
-#include "gfx/text/fontref.hh"
-
 using namespace fargo;
 
 int main(int argc, char** argv) 

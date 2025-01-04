@@ -9,7 +9,6 @@ Visualizer::Visualizer()
     this->window = nullptr;
     this->buffer = nullptr;
     this->title = "Untitled";
-    this->text_renderer = std::make_unique<TextRenderer>();
 }
 
 Visualizer::~Visualizer() 
@@ -50,14 +49,8 @@ Response<void> Visualizer::reset_mfb()
     return Responses::flawless();
 }
 
-static bool already = false;
-
 Response<void> Visualizer::update_mfb()
 {
-    if (!already) {
-        this->text_renderer->render_putc('A', 1, 1);
-        already = true;
-    }
     mfb_wait_sync((struct mfb_window *)this->window);
     int mfb_status = mfb_update_ex((struct mfb_window *)this->window, (void *)this->buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y);
     if (mfb_status < 0) {
@@ -81,19 +74,6 @@ Response<void> Visualizer::reset(const std::string& window_title)
     }
 
     current_status = this->reset_mfb().status;
-    if (StatusValidator::indicates_intervention(current_status)) {
-        return Response<void>(current_status);
-    }
-
-    this->text_renderer->unregister_font();
-    this->text_renderer->unregister_framebuffer();
-
-    current_status = this->text_renderer->register_framebuffer(this->buffer, DISPLAY_SIZE_X, DISPLAY_SIZE_Y).status;
-    if (StatusValidator::indicates_intervention(current_status)) {
-        return Response<void>(current_status);
-    }
-
-    current_status = this->text_renderer->register_font(DEFAULT_FONT_FILENAME).status;
     if (StatusValidator::indicates_intervention(current_status)) {
         return Response<void>(current_status);
     }
