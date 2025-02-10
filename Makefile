@@ -1,21 +1,17 @@
 SOURCE	= src
 OUTPUT	= bin
-INCLUDE = inc
-LIBRARY = lib
 
 CPPCODE = $(shell find $(SOURCE) -type f -name '*.cc')
 OBJECTS	= $(patsubst $(SOURCE)/%.cc, $(OUTPUT)/%.cc.o, $(CPPCODE))
 
 EXECUTE = fargo
 PROGRAM	= $(OUTPUT)/$(EXECUTE)
-CPPLIBS = $(shell find $(LIBRARY) -type f -name '*.lib')
 
 CC 	= clang++
 LD 	= clang++
 
 CCFLAGS = \
 -I$(SOURCE) \
--I$(INCLUDE) \
 -std=c++20 \
 -fpie \
 -gdwarf \
@@ -41,7 +37,7 @@ $(OUTPUT)/%.cc.o: $(SOURCE)/%.cc
 
 $(PROGRAM): $(OBJECTS)
 	@ echo "	link $@ (1/1)"
-	@ $(LD) $(LDFLAGS) $(OBJECTS) $(CPPLIBS) -o $(PROGRAM)
+	@ $(LD) $(LDFLAGS) $(OBJECTS) -o $(PROGRAM)
 
 clean:
 	@ rm -rf $(OUTPUT)

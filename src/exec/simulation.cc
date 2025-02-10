@@ -1,21 +1,14 @@
 #include "exec/simulation.hh"
 #include "response.hh"
-#include "constants.hh"
 #include <iostream>
 #include <thread>
 
 using namespace fargo;
 
-Simulation::Simulation(const bool start_graphic, const std::string& new_label)
+Simulation::Simulation(const std::string& new_label)
 {
     this->currently.is_running = false;
-    this->currently.is_graphical = (bool)(start_graphic && VISUALIZER_SHOULD_WORK);
     this->label = std::string(new_label);
-
-    if (this->currently.is_graphical) {
-        this->canvas = std::make_unique<Visualizer>();
-    }
-
     this->population = std::make_unique<Population>();
 
     std::cout << "Initiated new simulation \"" << this->label << "\"." << std::endl;
@@ -39,42 +32,9 @@ Response<void> Simulation::reset()
         return Response<void>(latest_status);
     }
 
-    if (this->currently.is_graphical) {
-        if (VISUALIZER_MULTITHREAD) {
-            std::thread visualizer_thread(&Simulation::visual_thread, this);
-            visualizer_thread.detach();
-            std::cout << "Spawned visualizer thread for simulation \"" << this->label << "\"." << std::endl;
-        }
-        else {
-            latest_status = this->canvas->reset(this->label).status;
-            if (StatusValidator::indicates_intervention(latest_status)) {
-                this->currently.is_graphical = false;
-                latest_status = this->canvas->cancel().status;
-                if (latest_status == Status::REDUNDANT) {
-                    this->currently.is_running = false;
-                    return Response<void>(Status::ERROR_STATE_CORRUPT);
-                }
-            }
-        }
-    }
-
     std::cout << "Simulation \"" << this->label << "\" reset to default state." << std::endl;
 
     return Responses::flawless();
-}
-
-void Simulation::visual_thread() {
-    if (this->canvas->reset(this->label).status != Status::FLAWLESS) {
-        this->currently.is_graphical = false;
-        return;
-    }
-    while (this->currently.is_running && this->currently.is_graphical) {
-        Status latest_status = this->canvas->update_with(this->population->reference_data()).status;
-        if (StatusValidator::indicates_intervention(latest_status)) {
-            this->currently.is_graphical = false;
-            latest_status = this->canvas->cancel().status;
-        }
-    }
 }
 
 Response<void> Simulation::update()
@@ -84,19 +44,6 @@ Response<void> Simulation::update()
     }
 
     Status latest_status = Status::FLAWLESS;
-
-    if (!VISUALIZER_MULTITHREAD) {
-        if (this->currently.is_graphical) {
-            latest_status = this->canvas->update_with(this->population->reference_data()).status;
-            if (StatusValidator::indicates_intervention(latest_status)) {
-                this->currently.is_graphical = false;
-                latest_status = this->canvas->cancel().status;
-                if (latest_status == Status::REDUNDANT) {
-                    return Response<void>(Status::ERROR_STATE_CORRUPT);
-                }
-            }
-        }
-    }
 
     latest_status = this->population->update().status;
     if (StatusValidator::indicates_intervention(latest_status)) {
