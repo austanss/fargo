@@ -1,5 +1,4 @@
 #include "exec/simulation.hh"
-#include "response.hh"
 #include <iostream>
 #include <thread>
 
@@ -7,7 +6,7 @@ using namespace fargo;
 
 Simulation::Simulation(const std::string& new_label)
 {
-    this->currently.is_running = false;
+    this->state.active = false;
     this->label = std::string(new_label);
     this->population = std::make_unique<Population>();
 
@@ -24,11 +23,11 @@ Simulation::Simulation() {}
 Response<void> Simulation::reset()
 {
     Status latest_status = Status::FLAWLESS;
-    this->currently.is_running = true;
+    this->state.active = true;
 
     latest_status = this->population->reset().status;
     if (StatusValidator::indicates_intervention(latest_status)) {
-        this->currently.is_running = false;
+        this->state.active = false;
         return Response<void>(latest_status);
     }
 
@@ -39,7 +38,7 @@ Response<void> Simulation::reset()
 
 Response<void> Simulation::update()
 {
-    if (!this->currently.is_running) {
+    if (!this->state.active) {
         return Response<void>(Status::QUIET_FAILURE);
     }
 
@@ -47,11 +46,11 @@ Response<void> Simulation::update()
 
     latest_status = this->population->update().status;
     if (StatusValidator::indicates_intervention(latest_status)) {
-        this->currently.is_running = false;
+        this->state.active = false;
         return Response<void>(latest_status);
     }
 
-    this->currently.month_tick++;
+    this->state.month_tick++;
 
     return latest_status;
 }

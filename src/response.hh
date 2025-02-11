@@ -7,13 +7,14 @@ namespace fargo {
         REDUNDANT           = 1,
         QUIET_FAILURE       = 2,
         ERROR_UNKNOWN       = 3,
-        ERROR_MISUSE        = 4,
+        ERROR_INVALID_USAGE = 4,
         ERROR_UNIMPLEMENTED = 5,
         ERROR_STATE_CORRUPT = 6,
         ERROR_MISALLOCATION = 7,
         ERROR_FAILED_INIT   = 8,
         ERROR_OUT_OF_TIME   = 9,
         ERROR_FILE_404      = 10,
+        ERROR_BAD_ARGUMENT  = 11,
     };
 
     class StatusValidator 

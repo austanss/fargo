@@ -22,9 +22,9 @@ namespace fargo
         Simulation();
 
         struct {
-            bool                is_running;
+            bool                active;
             unsigned long long  month_tick;
-        } currently;
+        } state;
 
         std::string label;
         

@@ -1,4 +1,5 @@
 #include "exec/simulation.hh"
+#include "exec/context.hh"
 #include <iostream>
 #include <memory>
 
@@ -10,9 +11,20 @@ int main(int argc, char** argv)
     std::unique_ptr<Simulation> sim = std::make_unique<Simulation>(primary_label);
     sim->reset();
 
+    Context context = Context();
+    context.restore_defaults();
+    context.match_parameters_raw(argc, argv);
+    
+    std::cout << "Variable context: \n";
+    std::cout << "Benefits: " << context.independents.benefits;
+    std::cout << "\nRestrictions: " << context.independents.restricts;
+    std::cout << "\nGradual: " << context.independents.gradually;
+    std::cout << "\nPopulation size: " << context.controls.pop_size;
+    std::cout << "\nMonthly benefit: " << context.controls.monthly_benefit << std::endl;
+
     // Used to externally observe if the loop is hung up
     int tick_indicator = 0;
-    std::cout << "Tick evidence: 0" << tick_indicator;
+    std::cout << "\nTick evidence: 0" << tick_indicator;
 
     bool running = true;
     while (running) {
