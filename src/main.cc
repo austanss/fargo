@@ -7,20 +7,27 @@ using namespace fargo;
 
 int main(int argc, char** argv) 
 {
+    Context context = Context();
+    context.restore_defaults();
+    
+    if (context.match_parameters_raw(argc, argv).status != Status::FLAWLESS) {
+        std::cout << "Failed to match (invalid) parameters. Exiting." << std::endl;
+        return 1;
+    }
+    
+    std::cout << "Independent variables: \n";
+    std::cout << "\tBenefits: " << context.independents.benefits;
+    std::cout << "\n\tRestrictions: " << context.independents.restricts;
+    std::cout << "\n\tGradual: " << context.independents.gradually;
+    std::cout << "\nControlled variables: \n";
+    std::cout << "\tPopulation size: " << context.controls.pop_size;
+    std::cout << "\n\tDuration (months): " << context.controls.max_months;
+    std::cout << "\n\tMonthly benefit: " << context.controls.monthly_benefit << std::endl << std::endl;
+
+
     const std::string primary_label = "Simulation";
     std::unique_ptr<Simulation> sim = std::make_unique<Simulation>(primary_label);
     sim->reset();
-
-    Context context = Context();
-    context.restore_defaults();
-    context.match_parameters_raw(argc, argv);
-    
-    std::cout << "Variable context: \n";
-    std::cout << "Benefits: " << context.independents.benefits;
-    std::cout << "\nRestrictions: " << context.independents.restricts;
-    std::cout << "\nGradual: " << context.independents.gradually;
-    std::cout << "\nPopulation size: " << context.controls.pop_size;
-    std::cout << "\nMonthly benefit: " << context.controls.monthly_benefit << std::endl;
 
     // Used to externally observe if the loop is hung up
     int tick_indicator = 0;

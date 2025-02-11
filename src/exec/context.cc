@@ -17,6 +17,7 @@ Response<void> Context::restore_defaults()
 
     this->controls.pop_size = 1000;
     this->controls.monthly_benefit = 1000;
+    this->controls.max_months = 12 * 20;
 
     return Responses::flawless();
 }
@@ -24,13 +25,14 @@ Response<void> Context::restore_defaults()
 static constexpr int SWITCH_DASHES = 1;
 static constexpr int VALUE_DASHES = 2;
 
-static constexpr long parameter_count = 5;
+static constexpr long parameter_count = 6;
 static std::string parameter_names[] = {
     "benefit",          //0
     "restrict",         //1
     "gradual",          //2
     "pop-size",         //3
-    "monthly-benefit"   //4
+    "monthly-benefit",  //4
+    "max-months"        //5
 };
 
 static long index_of_parameter(const std::string& parameter)
@@ -122,6 +124,9 @@ Response<void> Context::match_parameters_raw(int argc, char** argv)
                     break;
                 case 4:
                     this->controls.monthly_benefit = std::stoul(value.result);
+                    break;
+                case 5:
+                    this->controls.max_months = std::stoul(value.result);
                     break;
                 default:
                     return Response<void>(Status::ERROR_BAD_ARGUMENT);
