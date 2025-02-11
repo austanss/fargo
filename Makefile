@@ -16,13 +16,12 @@ CCFLAGS = \
 -fpie \
 -gdwarf \
 -Werror \
--pedantic #\
--02 \
+-pedantic \
+-O2 \
+
 
 LDFLAGS = \
--pie	\
--lGL \
--lX11 \
+-pie \
 
 
 .DEFAULT-GOAL	= all
