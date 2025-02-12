@@ -2,16 +2,16 @@
 
 using namespace fargo;
 
-PopulationData::PopulationData() 
+StoredPopulation::StoredPopulation() 
 {
     this->entities = std::make_unique<EntityCollection>();
 }
 
-PopulationData::~PopulationData() 
+StoredPopulation::~StoredPopulation() 
 {
 }
 
-Response<void> PopulationData::summarize()
+Response<void> StoredPopulation::summarize()
 {
     Status current_status = Status::FLAWLESS;
 
@@ -22,7 +22,7 @@ Response<void> PopulationData::summarize()
 
 Population::Population() 
 {
-    this->data = std::make_unique<PopulationData>();
+    this->data = std::make_unique<StoredPopulation>();
     this->uid_i = 0;
 }
 
@@ -46,29 +46,13 @@ Response<void> Population::update()
 {
     Status latest_status = Status::FLAWLESS;
 
-    latest_status = this->update_advance_ages().status;
-    if (StatusValidator::indicates_intervention(latest_status)) {
-        return Response<void>(latest_status);
-    }
-
-    latest_status = this->update_handle_births().status;
-    if (StatusValidator::indicates_intervention(latest_status)) {
-        return Response<void>(latest_status);
-    }
-
-    latest_status = this->update_handle_deaths().status;
-    if (StatusValidator::indicates_intervention(latest_status)) {
-        return Response<void>(latest_status);
-    }
-
-    latest_status = this->data->summarize().status;
+    latest_status = this->update_durations().status;
     if (StatusValidator::indicates_intervention(latest_status)) {
         return Response<void>(latest_status);
     }
 
     return Responses::flawless();
 }
-
 
 static constexpr unsigned long DEFAULT_START_SIZE = 16;
 
@@ -77,7 +61,7 @@ Response<void> Population::reset_population_data()
     Status current_status = Status::FLAWLESS;
 
     this->data.reset();
-    this->data = std::make_unique<PopulationData>();
+    this->data = std::make_unique<StoredPopulation>();
 
     this->uid_i = 0;
 
@@ -93,29 +77,41 @@ Response<void> Population::reset_population_data()
     return Responses::flawless();
 }
 
-Response<void> Population::update_advance_ages()
+Response<void> Population::update_durations()
 {
     Status current_status = Status::FLAWLESS;
 
-
+    const int count = this->reference_data().entities->count();
+    for (int i = 0; i < count; i++)
+    {
+        this->data->entities->get_by_index(i).month_age++;
+    }
 
     return Responses::flawless();
 }
 
-Response<void> Population::update_handle_births()
+Response<void> Population::update_incomes()
 {
     Status current_status = Status::FLAWLESS;
 
-
+    const int count = this->reference_data().entities->count();
+    for (int i = 0; i < count; i++)
+    {
+        //
+    }
 
     return Responses::flawless();
 }
 
-Response<void> Population::update_handle_deaths()
+Response<void> Population::update_eligibility()
 {
     Status current_status = Status::FLAWLESS;
 
-
+    const int count = this->reference_data().entities->count();
+    for (int i = 0; i < count; i++)
+    {
+        //
+    }
 
     return Responses::flawless();
 }

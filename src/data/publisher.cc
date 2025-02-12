@@ -4,7 +4,7 @@
 
 using namespace fargo;
 
-Publisher::Publisher(const PopulationData& input_data) : publishee(input_data) {}
+Publisher::Publisher(const StoredPopulation& input_data) : publishee(input_data) {}
 
 Publisher::~Publisher() {}
 

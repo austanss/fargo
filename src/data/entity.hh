@@ -6,17 +6,13 @@
 namespace fargo
 {
 
-    class Entity 
+    struct Entity 
     {
-
-    public:
         unsigned long uid;
         unsigned long month_age;
-        bool fertile;
-
-        Entity();
-        ~Entity();
-
+        unsigned long month_income;
+        unsigned long month_expense;
+        unsigned long total_savings;
     };
 
     class EntityCollection

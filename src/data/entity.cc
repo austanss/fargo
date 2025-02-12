@@ -2,14 +2,6 @@
 
 using namespace fargo;
 
-Entity::Entity() 
-{
-    this->uid = 0;
-    this->month_age = 0;
-}
-
-Entity::~Entity() {}
-
 EntityCollection::EntityCollection() 
 {
     this->entity_map = new std::map<unsigned long, Entity*>();

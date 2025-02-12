@@ -16,7 +16,7 @@ CCFLAGS = \
 -fpie \
 -gdwarf \
 -Werror \
--pedantic \
+-pedantic #\
 -O2 \
 
 

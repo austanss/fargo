@@ -7,12 +7,12 @@ namespace fargo
 {
 
     // Operated on by Population
-    class PopulationData
+    class StoredPopulation
     {
 
     public:
-        PopulationData();
-        ~PopulationData();
+        StoredPopulation();
+        ~StoredPopulation();
 
         struct {
             unsigned long   head_count;
@@ -23,7 +23,7 @@ namespace fargo
         std::unique_ptr<EntityCollection> entities;
     };
 
-    // Operates on PopulationData
+    // Operates on StoredPopulation
     class Population
     {
 
@@ -34,18 +34,18 @@ namespace fargo
         Response<void> reset();
         Response<void> update();
 
-        inline const PopulationData& reference_data() const { return *(this->data); }
+        inline const StoredPopulation& reference_data() const { return *(this->data); }
 
     private:
-        std::unique_ptr<PopulationData> data;
+        std::unique_ptr<StoredPopulation> data;
 
         unsigned long uid_i;
 
         Response<void> reset_population_data();
 
-        Response<void> update_advance_ages();
-        Response<void> update_handle_births();
-        Response<void> update_handle_deaths();
+        Response<void> update_durations();
+        Response<void> update_eligibility();
+        Response<void> update_incomes();
 
     };
 
