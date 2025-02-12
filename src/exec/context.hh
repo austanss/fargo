@@ -32,6 +32,11 @@ namespace fargo
             unsigned long       max_months;
         } controls;
 
+        struct {
+            std::string         output_path;
+            std::string         output_label;
+        } environment;
+
     private:
         
 

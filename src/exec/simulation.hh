@@ -3,6 +3,7 @@
 #include <memory>
 #include "response.hh"
 #include "data/population.hh"
+#include "exec/context.hh"
 
 namespace fargo 
 {
@@ -10,7 +11,7 @@ namespace fargo
     {
 
     public:
-        Simulation(const std::string& new_label);
+        Simulation(const Context params);
         ~Simulation();
 
         Response<void> reset();
@@ -20,6 +21,8 @@ namespace fargo
 
     private:
         Simulation();
+
+        const Context parameters;
 
         struct {
             bool                active;

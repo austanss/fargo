@@ -19,20 +19,25 @@ Response<void> Context::restore_defaults()
     this->controls.monthly_benefit = 1000;
     this->controls.max_months = 12 * 20;
 
+    this->environment.output_path = "fargo.txt";
+    this->environment.output_label = "Default";
+
     return Responses::flawless();
 }
 
 static constexpr int SWITCH_DASHES = 1;
 static constexpr int VALUE_DASHES = 2;
 
-static constexpr long parameter_count = 6;
+static constexpr long parameter_count = 8;
 static std::string parameter_names[] = {
-    "benefit",          //0
-    "restrict",         //1
-    "gradual",          //2
-    "pop-size",         //3
-    "monthly-benefit",  //4
-    "max-months"        //5
+    "output",           //0
+    "label",            //1
+    "benefit",          //2
+    "restrict",         //3
+    "gradual",          //4
+    "pop-size",         //5
+    "monthly-benefit",  //6
+    "max-months"        //7
 };
 
 static long index_of_parameter(const std::string& parameter)
@@ -97,13 +102,13 @@ Response<void> Context::match_parameters_raw(int argc, char** argv)
 
         if (!needs_value) {
             switch (index_of_parameter(trimmed)) {
-                case 0:
+                case 2:
                     this->independents.benefits = true;
                     break;
-                case 1:
+                case 3:
                     this->independents.restricts = true;
                     break;
-                case 2:
+                case 4:
                     this->independents.gradually = true;
                     break;
                 default:
@@ -119,14 +124,20 @@ Response<void> Context::match_parameters_raw(int argc, char** argv)
             std::string retrimmed = trimmed.substr(0, trimmed.find_first_of('='));
 
             switch (index_of_parameter(retrimmed)) {
-                case 3:
+                case 5:
                     this->controls.pop_size = std::stoul(value.result);
                     break;
-                case 4:
+                case 6:
                     this->controls.monthly_benefit = std::stoul(value.result);
                     break;
-                case 5:
+                case 7:
                     this->controls.max_months = std::stoul(value.result);
+                    break;
+                case 0:
+                    this->environment.output_path = value.result;
+                    break;
+                case 1:
+                    this->environment.output_label = value.result;
                     break;
                 default:
                     return Response<void>(Status::ERROR_BAD_ARGUMENT);

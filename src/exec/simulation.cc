@@ -4,10 +4,10 @@
 
 using namespace fargo;
 
-Simulation::Simulation(const std::string& new_label)
+Simulation::Simulation(const Context params) : parameters(params)
 {
     this->state.active = false;
-    this->label = std::string(new_label);
+    this->label = std::string(parameters.environment.output_label);
     this->population = std::make_unique<Population>();
 
     std::cout << "Initiated new simulation \"" << this->label << "\"." << std::endl;
@@ -24,6 +24,7 @@ Response<void> Simulation::reset()
 {
     Status latest_status = Status::FLAWLESS;
     this->state.active = true;
+    this->state.month_tick = 0;
 
     latest_status = this->population->reset().status;
     if (StatusValidator::indicates_intervention(latest_status)) {
@@ -51,6 +52,11 @@ Response<void> Simulation::update()
     }
 
     this->state.month_tick++;
+
+    if (this->state.month_tick > this->parameters.controls.max_months) {
+        this->state.active = false;
+        return Response<void>(Status::ERROR_OUT_OF_TIME);
+    }
 
     return latest_status;
 }
