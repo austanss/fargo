@@ -1,5 +1,6 @@
 #include "exec/simulation.hh"
 #include "exec/context.hh"
+#include "data/publisher.hh"
 #include <iostream>
 #include <memory>
 
@@ -40,6 +41,9 @@ int main(int argc, char** argv)
             std::cout << "\nSimulation \"" << sim->get_label() << "\" ended with status " << latest_status << "." << std::endl;
         }
     }
+
+    Publisher(sim->read_population().reference_data())
+        .serialize_to_file(context.environment.output_path);
 
     return 0;
 }

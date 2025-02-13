@@ -22,7 +22,7 @@ Response<void> Publisher::serialize_to_file(const std::string& file_path)
     for (unsigned long i = 0; i < publishee.entities->count(); i++) 
     {
         const Entity& entity = publishee.entities->get_by_index(i);
-        output << i << ", Indiv." << entity.uid << ",age=" << entity.month_age << " \n";
+        output << i << ",  \tIndiv." << entity.uid << ",age=" << entity.month_age << " \n";
     }
     
     output << "&" << std::endl;

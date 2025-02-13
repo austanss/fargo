@@ -18,6 +18,7 @@ namespace fargo
         Response<void> update();
 
         inline const std::string& get_label() const { return this->label; }
+        inline const Population& read_population() const { return *this->population; }
 
     private:
         Simulation();
