@@ -28,11 +28,13 @@ namespace fargo
     {
 
     public:
-        Population();
+        Population(unsigned long size);
         ~Population();
 
         Response<void> reset();
         Response<void> update();
+
+        const unsigned long root_size;
 
         inline const StoredPopulation& reference_data() const { return *(this->data); }
 

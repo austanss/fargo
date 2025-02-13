@@ -1,4 +1,5 @@
 #include "data/population.hh"
+#include "data/statistics.hh"
 
 using namespace fargo;
 
@@ -20,7 +21,7 @@ Response<void> StoredPopulation::summarize()
     return Responses::flawless();
 }
 
-Population::Population() 
+Population::Population(unsigned long size) : root_size(size)
 {
     this->data = std::make_unique<StoredPopulation>();
     this->uid_i = 0;
@@ -54,8 +55,6 @@ Response<void> Population::update()
     return Responses::flawless();
 }
 
-static constexpr unsigned long DEFAULT_START_SIZE = 16;
-
 Response<void> Population::reset_population_data()
 {
     Status current_status = Status::FLAWLESS;
@@ -65,8 +64,11 @@ Response<void> Population::reset_population_data()
 
     this->uid_i = 0;
 
-    for (unsigned long i = 0; i < DEFAULT_START_SIZE; i++) {
+    const Distribution age_distro = Distribution(50.0, 15.0);
+    NormalRandom new_ages = NormalRandom(age_distro);
+    for (unsigned long i = 0; i < root_size; i++) {
         this->data->entities->create(this->uid_i++);
+        this->data->entities->get_by_index(i).month_age = new_ages.generate();
     }
 
     current_status = this->data->summarize().status;

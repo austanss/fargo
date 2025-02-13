@@ -4,3 +4,4 @@ test/
 .vs/
 vg**
 fargo.txt
+*.log
