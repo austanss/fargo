@@ -43,6 +43,11 @@ Response<void> Simulation::update()
         return Response<void>(Status::QUIET_FAILURE);
     }
 
+    if (this->state.month_tick >= this->parameters.controls.max_months) {
+        this->state.active = false;
+        return Response<void>(Status::ERROR_OUT_OF_TIME);
+    }
+
     Status latest_status = Status::FLAWLESS;
 
     latest_status = this->population->update().status;
@@ -52,11 +57,6 @@ Response<void> Simulation::update()
     }
 
     this->state.month_tick++;
-
-    if (this->state.month_tick > this->parameters.controls.max_months) {
-        this->state.active = false;
-        return Response<void>(Status::ERROR_OUT_OF_TIME);
-    }
 
     return latest_status;
 }
