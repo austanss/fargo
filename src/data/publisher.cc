@@ -17,12 +17,12 @@ Response<void> Publisher::serialize_to_file(const std::string& file_path)
         return Response<void>(Status::ERROR_FILE_404);
     } 
 
-    output << "Population dataset automatically generated output from Fargo.\n" << std::endl;
+    output << "uid,age" << std::endl;
 
     for (unsigned long i = 0; i < publishee.entities->count(); i++) 
     {
         const Entity& entity = publishee.entities->get_by_index(i);
-        output << i << ",  \tIndiv." << entity.uid << ",age=" << entity.month_age << " \n";
+        output << entity.uid << "," << entity.month_age << std::endl;
     }
     
     output << "&" << std::endl;
