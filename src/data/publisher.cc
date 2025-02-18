@@ -17,15 +17,19 @@ Response<void> Publisher::serialize_to_file(const std::string& file_path)
         return Response<void>(Status::ERROR_FILE_404);
     } 
 
-    output << "uid,age" << std::endl;
+    output << "Index,Age in months,Total savings,Revenue monthly,Expenses monthly" << std::endl;
 
     for (unsigned long i = 0; i < publishee.entities->count(); i++) 
     {
         const Entity& entity = publishee.entities->get_by_index(i);
-        output << entity.uid << "," << entity.month_age << std::endl;
+        output << entity.uid << ",";
+        output << entity.month_age << ",";
+        output << entity.total_savings << ",";
+        output << entity.month_income << ","; 
+        output << entity.month_expense << "\n";
     }
     
-    output << "&" << std::endl;
+    output << "\n\n" << std::endl;
 
     output.close();
 
