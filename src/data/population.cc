@@ -68,7 +68,7 @@ Response<void> Population::reset_population_data()
     NormalRandom new_ages = NormalRandom(age_distro);
     for (unsigned long i = 0; i < root_size; i++) {
         this->data->entities->create(this->uid_i++);
-        this->data->entities->get_by_index(i).month_age = new_ages.generate();
+        this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate());
     }
 
     current_status = this->data->summarize().status;

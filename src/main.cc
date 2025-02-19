@@ -25,7 +25,6 @@ int main(int argc, char** argv)
     std::cout << "\n\tDuration (months): " << context.controls.max_months;
     std::cout << "\n\tMonthly benefit: " << context.controls.monthly_benefit << std::endl << std::endl;
 
-
     std::unique_ptr<Simulation> sim = std::make_unique<Simulation>(context);
     sim->reset();
 
