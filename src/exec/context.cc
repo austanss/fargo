@@ -9,6 +9,13 @@ Context::Context()
 
 Context::~Context() {}
 
+Context::Context(const Context& other)
+{
+    this->independents = other.independents;
+    this->controls = other.controls;
+    this->environment = other.environment;
+}
+
 Response<void> Context::restore_defaults()
 {
     this->independents.benefits = false;
@@ -16,7 +23,7 @@ Response<void> Context::restore_defaults()
     this->independents.gradually = false;
 
     this->controls.pop_size = 96;
-    this->controls.monthly_benefit = 1000;
+    this->controls.monthly_benefit = 967;    // 2025 ssa.gov
     this->controls.max_months = 0;
 
     this->environment.output_path = "fargo.csv";

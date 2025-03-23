@@ -6,3 +6,5 @@ vg**
 fargo.txt
 fargo.csv
 *.log
+.replit
+.ccls-cache/

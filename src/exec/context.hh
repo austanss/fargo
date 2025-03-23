@@ -14,6 +14,7 @@ namespace fargo
     public:
         Context();
         ~Context();
+        Context(const Context& copy);
 
         Response<void>          restore_defaults();
         Response<void>          match_parameters_raw(int argc, char** argv);
