@@ -10,7 +10,7 @@ namespace fargo
     {
         unsigned long uid;
         unsigned long month_age;
-        unsigned long month_income;
+        unsigned long month_revenue;
         unsigned long month_expense;
         unsigned long total_savings;
     };

@@ -9,7 +9,7 @@ Distribution::Distribution(const double mu, const double sigma) : median(mu), de
 
 Distribution::Distribution(const Distribution& copy) : median(copy.median), deviation(copy.deviation) {}
 
-NormalRandom::NormalRandom(const Distribution& dist) : distribution(dist) 
+NormalRandom::NormalRandom(const Distribution& distr) : dist(distr) 
 {
     this->regenerate_seed();
 }
@@ -24,6 +24,6 @@ void NormalRandom::regenerate_seed()
 
 double NormalRandom::generate() 
 {
-    std::normal_distribution<double> normal_dist(this->distribution.median, this->distribution.deviation);
+    std::normal_distribution<double> normal_dist(this->dist.median, this->dist.deviation);
     return normal_dist(this->prng);
 }

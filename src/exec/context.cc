@@ -22,9 +22,9 @@ Response<void> Context::restore_defaults()
     this->independents.restricts = false;
     this->independents.gradually = false;
 
-    this->controls.pop_size = 96;
+    this->controls.pop_size = 21;
     this->controls.monthly_benefit = 967;    // 2025 ssa.gov
-    this->controls.max_months = 0;
+    this->controls.max_months = 12;
 
     this->environment.output_path = "fargo.csv";
     this->environment.output_label = "Default";

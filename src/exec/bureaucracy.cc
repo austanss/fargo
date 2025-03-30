@@ -11,15 +11,15 @@ void Bureaucrat::contextualize(const Context& otro_contexto)
 	this->context = Context(otro_contexto);
 }
 
-bool Bureaucrat::see_eligibility(unsigned long income) 
+bool Bureaucrat::see_eligibility(const Entity& subject) 
 {
-	return !(this->context.controls.monthly_benefit < (income / 2));
+	return !(this->context.controls.monthly_benefit < (subject.month_revenue / 2));
 }
 
-unsigned int Bureaucrat::see_benefit(unsigned long income) 
+unsigned int Bureaucrat::see_benefit(const Entity& subject) 
 {
-	if (this->see_eligibility(income))
-		return this->context.controls.monthly_benefit - (income / 2);
+	if (this->see_eligibility(subject))
+		return this->context.controls.monthly_benefit - (subject.month_revenue / 2);
 	else
 		return 0;
 }

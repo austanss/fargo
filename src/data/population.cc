@@ -52,6 +52,11 @@ Response<void> Population::update()
         return Response<void>(latest_status);
     }
 
+    latest_status = this->update_savings().status;
+    if (StatusValidator::indicates_intervention(latest_status)) {
+        return Response<void>(latest_status);
+    }
+
     return Responses::flawless();
 }
 
@@ -65,10 +70,34 @@ Response<void> Population::reset_population_data()
     this->uid_i = 0;
 
     const Distribution age_distro = Distribution(50.0, 15.0);
-    NormalRandom new_ages = NormalRandom(age_distro);
     for (unsigned long i = 0; i < root_size; i++) {
+        NormalRandom new_ages = NormalRandom(age_distro);
         this->data->entities->create(this->uid_i++);
         this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate());
+    }
+
+    const Distribution income_distro = Distribution(3000.0, 800.0);
+    for (unsigned long i = 0; i < root_size; i++) {
+        NormalRandom new_incomes = NormalRandom(income_distro);
+        Entity& entity = this->data->entities->get_by_index(i);
+        entity.month_revenue = new_incomes.generate();
+    }
+
+    const Distribution expense_distro = Distribution(2000.0, 500.0);
+    for (unsigned long i = 0; i < root_size; i++) {
+        Entity& entity = this->data->entities->get_by_index(i);
+
+        double fiscal_proportion = entity.month_revenue / income_distro.median;
+
+        NormalRandom new_expenses = NormalRandom( {
+             expense_distro.median * fiscal_proportion, 
+             expense_distro.deviation * fiscal_proportion 
+        });
+
+        entity.month_expense = new_expenses.generate();
+        while (entity.month_revenue < entity.month_expense) {
+            entity.month_expense = new_expenses.generate();
+        }
     }
 
     current_status = this->data->summarize().status;
@@ -92,27 +121,15 @@ Response<void> Population::update_durations()
     return Responses::flawless();
 }
 
-Response<void> Population::update_incomes()
+Response<void> Population::update_savings()
 {
     Status current_status = Status::FLAWLESS;
 
     const int count = this->reference_data().entities->count();
     for (int i = 0; i < count; i++)
     {
-        //
-    }
-
-    return Responses::flawless();
-}
-
-Response<void> Population::update_eligibility()
-{
-    Status current_status = Status::FLAWLESS;
-
-    const int count = this->reference_data().entities->count();
-    for (int i = 0; i < count; i++)
-    {
-        //
+        Entity& entity = this->data->entities->get_by_index(i);
+        entity.total_savings += (entity.month_revenue - entity.month_expense);
     }
 
     return Responses::flawless();

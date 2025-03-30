@@ -46,8 +46,8 @@ namespace fargo
         Response<void> reset_population_data();
 
         Response<void> update_durations();
-        Response<void> update_eligibility();
-        Response<void> update_incomes();
+        Response<void> update_savings();
+        Response<void> update_guess();
 
     };
 

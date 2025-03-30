@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         Status latest_status = sim->update().status;
         running = !(StatusValidator::indicates_intervention(latest_status));
         if (latest_status == Status::ERROR_OUT_OF_TIME) {
-            std::cout << "\nSimulation \"" << sim->get_label() << "\" finished as due." << std::endl;
+            std::cout << "\nSimulation \"" << sim->get_label() << "\" finished as due after " << context.controls.max_months << " months." << std::endl;
             break;
         }
         if (!running) {

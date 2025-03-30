@@ -1,5 +1,6 @@
 #pragma once
 #include "exec/context.hh"
+#include "data/entity.hh"
 
 namespace fargo
 {
@@ -11,8 +12,8 @@ namespace fargo
 		Bureaucrat();
 		~Bureaucrat();
 		void contextualize(const Context& otro_contexto);
-		bool see_eligibility(unsigned long income);
-		unsigned int see_benefit(unsigned long income);
+		bool see_eligibility(const Entity& subject);
+		unsigned int see_benefit(const Entity& subject);
 
 	private:
 		Context context;

@@ -25,7 +25,7 @@ namespace fargo
         double generate();
 
     private:
-        const Distribution distribution;
+        Distribution dist;
         std::mt19937 prng;
     };
 
