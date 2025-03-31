@@ -22,8 +22,13 @@ void NormalRandom::regenerate_seed()
     this->prng = std::mt19937 { rdrand() };
 }
 
-double NormalRandom::generate() 
+double NormalRandom::generate(bool unsign) 
 {
     std::normal_distribution<double> normal_dist(this->dist.median, this->dist.deviation);
-    return normal_dist(this->prng);
+    double value = normal_dist(this->prng);
+    if (unsign && value < 0) {
+        value = 0;
+    }
+    return value;
 }
+    

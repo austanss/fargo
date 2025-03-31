@@ -22,7 +22,8 @@ namespace fargo
         NormalRandom(const Distribution& dist);
         ~NormalRandom();
         void regenerate_seed();
-        double generate();
+        // unsign: returns zero if negative
+        double generate(bool unsign);
 
     private:
         Distribution dist;

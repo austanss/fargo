@@ -73,17 +73,18 @@ Response<void> Population::reset_population_data()
     for (unsigned long i = 0; i < root_size; i++) {
         NormalRandom new_ages = NormalRandom(age_distro);
         this->data->entities->create(this->uid_i++);
-        this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate());
+        this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate(true));
     }
 
-    const Distribution income_distro = Distribution(3000.0, 800.0);
+    const Distribution income_distro = Distribution(5295.0, 6795.0); // pincs
     for (unsigned long i = 0; i < root_size; i++) {
         NormalRandom new_incomes = NormalRandom(income_distro);
         Entity& entity = this->data->entities->get_by_index(i);
-        entity.month_revenue = new_incomes.generate();
+        entity.month_revenue = new_incomes.generate(true);
     }
 
-    const Distribution expense_distro = Distribution(2000.0, 500.0);
+    // EXPENSES are extremely extremely extremely difficult to even begin to attempt to model
+    const Distribution expense_distro = Distribution(5200.0, 6700.0);
     for (unsigned long i = 0; i < root_size; i++) {
         Entity& entity = this->data->entities->get_by_index(i);
 
@@ -94,9 +95,9 @@ Response<void> Population::reset_population_data()
              expense_distro.deviation * fiscal_proportion 
         });
 
-        entity.month_expense = new_expenses.generate();
+        entity.month_expense = new_expenses.generate(true);
         while (entity.month_revenue < entity.month_expense) {
-            entity.month_expense = new_expenses.generate();
+            entity.month_expense = new_expenses.generate(true);
         }
     }
 
