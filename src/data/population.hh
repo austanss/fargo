@@ -1,6 +1,7 @@
 #pragma once
 #include "response.hh"
 #include "data/entity.hh"
+#include "exec/context.hh"
 #include <memory>
 
 namespace fargo 
@@ -28,7 +29,7 @@ namespace fargo
     {
 
     public:
-        Population(unsigned long size);
+        Population(unsigned long size, const Context& ctx);
         ~Population();
 
         Response<void> reset();
@@ -40,6 +41,8 @@ namespace fargo
 
     private:
         std::unique_ptr<StoredPopulation> data;
+
+        const Context context;
 
         unsigned long uid_i;
 

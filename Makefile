@@ -40,6 +40,7 @@ $(PROGRAM): $(OBJECTS)
 
 clean:
 	@ rm -rf $(OUTPUT)
+	@ rm -rf fargo.csv
 
 # define ARGS in the command line in order to add additional arguments
 # ex: make run ARGS="build"

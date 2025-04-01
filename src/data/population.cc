@@ -1,5 +1,6 @@
 #include "data/population.hh"
 #include "data/statistics.hh"
+#include "exec/bureaucracy.hh"
 
 using namespace fargo;
 
@@ -21,7 +22,7 @@ Response<void> StoredPopulation::summarize()
     return Responses::flawless();
 }
 
-Population::Population(unsigned long size) : root_size(size)
+Population::Population(unsigned long size, const Context& contx) : root_size(size), context(contx)
 {
     this->data = std::make_unique<StoredPopulation>();
     this->uid_i = 0;
@@ -63,6 +64,8 @@ Response<void> Population::update()
 Response<void> Population::reset_population_data()
 {
     Status current_status = Status::FLAWLESS;
+    Bureaucrat bureau = Bureaucrat();
+    bureau.contextualize(this->context);
 
     this->data.reset();
     this->data = std::make_unique<StoredPopulation>();
@@ -84,11 +87,11 @@ Response<void> Population::reset_population_data()
     }
 
     // EXPENSES are extremely extremely extremely difficult to even begin to attempt to model
-    const Distribution expense_distro = Distribution(5200.0, 6700.0);
+    const Distribution expense_distro = Distribution(5200.0, 2400.0);
     for (unsigned long i = 0; i < root_size; i++) {
         Entity& entity = this->data->entities->get_by_index(i);
 
-        double fiscal_proportion = entity.month_revenue / income_distro.median;
+        double fiscal_proportion = ((entity.month_revenue == 0) ? context.controls.monthly_benefit : entity.month_revenue) / income_distro.median;
 
         NormalRandom new_expenses = NormalRandom( {
              expense_distro.median * fiscal_proportion, 
@@ -96,8 +99,17 @@ Response<void> Population::reset_population_data()
         });
 
         entity.month_expense = new_expenses.generate(true);
-        while (entity.month_revenue < entity.month_expense) {
-            entity.month_expense = new_expenses.generate(true);
+
+
+        if (entity.month_revenue == 0) {
+            while (entity.month_expense > context.controls.monthly_benefit) {
+                entity.month_expense = new_expenses.generate(true);
+            }
+        }
+        else {
+            while (entity.month_revenue < entity.month_expense) {
+                entity.month_expense = new_expenses.generate(true);
+            }
         }
     }
 
@@ -130,7 +142,13 @@ Response<void> Population::update_savings()
     for (int i = 0; i < count; i++)
     {
         Entity& entity = this->data->entities->get_by_index(i);
-        entity.total_savings += (entity.month_revenue - entity.month_expense);
+
+        unsigned long modulated_revenue = entity.month_revenue;
+
+        modulated_revenue += (entity.month_revenue < this->context.controls.monthly_benefit) ? 
+            this->context.controls.monthly_benefit : 0;
+
+        entity.total_savings += (modulated_revenue - entity.month_expense);
     }
 
     return Responses::flawless();

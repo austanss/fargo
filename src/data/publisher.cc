@@ -25,7 +25,7 @@ Response<void> Publisher::serialize_to_file(const std::string& file_path)
         output << entity.uid << ",";
         output << entity.month_age << ",";
         output << entity.total_savings << ",";
-        output << entity.month_revenue << ","; 
+        output << ((entity.month_revenue == 0) ? 967 : entity.month_revenue) << ","; 
         output << entity.month_expense << "\n";
     }
     

@@ -8,7 +8,7 @@ Simulation::Simulation(const Context params) : parameters(params)
 {
     this->state.active = false;
     this->label = std::string(parameters.environment.output_label);
-    this->population = std::make_unique<Population>(params.controls.pop_size);
+    this->population = std::make_unique<Population>(params.controls.pop_size, params);
 
     std::cout << "Initiated new simulation \"" << this->label << "\"." << std::endl;
 }
