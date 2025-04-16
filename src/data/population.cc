@@ -79,7 +79,7 @@ Response<void> Population::reset_population_data()
         this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate(true));
     }
 
-    const Distribution income_distro = Distribution(5295.0, 6795.0); // pincs
+    const Distribution income_distro = Distribution(5295.0, 15590.0); // pincs
     for (unsigned long i = 0; i < root_size; i++) {
         NormalRandom new_incomes = NormalRandom(income_distro);
         Entity& entity = this->data->entities->get_by_index(i);
@@ -91,7 +91,9 @@ Response<void> Population::reset_population_data()
     for (unsigned long i = 0; i < root_size; i++) {
         Entity& entity = this->data->entities->get_by_index(i);
 
-        double fiscal_proportion = ((entity.month_revenue == 0) ? context.controls.monthly_benefit : entity.month_revenue) / income_distro.median;
+        unsigned long entity_actual_income = (entity.month_revenue + bureau.see_benefit(entity));
+
+        double fiscal_proportion = (entity_actual_income) / income_distro.median;
 
         NormalRandom new_expenses = NormalRandom( {
              expense_distro.median * fiscal_proportion, 
@@ -100,17 +102,9 @@ Response<void> Population::reset_population_data()
 
         entity.month_expense = new_expenses.generate(true);
 
-
-        if (entity.month_revenue == 0) {
-            while (entity.month_expense > context.controls.monthly_benefit) {
-                entity.month_expense = new_expenses.generate(true);
-            }
-        }
-        else {
-            while (entity.month_revenue < entity.month_expense) {
-                entity.month_expense = new_expenses.generate(true);
-            }
-        }
+//        while (entity_actual_income < entity.month_expense) {
+//            entity.month_expense = new_expenses.generate(true);
+//        }
     }
 
     current_status = this->data->summarize().status;
@@ -138,6 +132,9 @@ Response<void> Population::update_savings()
 {
     Status current_status = Status::FLAWLESS;
 
+    Bureaucrat bureau = Bureaucrat();
+    bureau.contextualize(this->context);
+
     const int count = this->reference_data().entities->count();
     for (int i = 0; i < count; i++)
     {
@@ -145,10 +142,9 @@ Response<void> Population::update_savings()
 
         unsigned long modulated_revenue = entity.month_revenue;
 
-        modulated_revenue += (entity.month_revenue < this->context.controls.monthly_benefit) ? 
-            this->context.controls.monthly_benefit : 0;
+        modulated_revenue += bureau.see_benefit(entity);
 
-        entity.total_savings += (modulated_revenue - entity.month_expense);
+        entity.total_balance += (modulated_revenue - entity.month_expense);
     }
 
     return Responses::flawless();

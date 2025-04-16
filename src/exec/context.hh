@@ -30,6 +30,7 @@ namespace fargo
         struct {
             unsigned long       pop_size;
             unsigned long       monthly_benefit;
+            unsigned long       asset_cutoff;
             unsigned long       max_months;
         } controls;
 

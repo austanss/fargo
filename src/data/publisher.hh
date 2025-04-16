@@ -9,13 +9,13 @@ namespace fargo
     {
     
     public:
-        Publisher(const StoredPopulation& input_data);
+        Publisher(const Population& input_data);
         ~Publisher();
 
         Response<void> serialize_to_file(const std::string& file_path);
 
     private:
-        const StoredPopulation& publishee;
+        const Population& publishee;
 
     };
 

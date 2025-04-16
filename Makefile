@@ -16,8 +16,8 @@ CCFLAGS = \
 -fpie \
 -gdwarf \
 -Werror \
--pedantic #\
--O2 \
+-pedantic \
+-O0 \
 
 
 LDFLAGS = \

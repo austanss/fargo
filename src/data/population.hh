@@ -37,12 +37,12 @@ namespace fargo
 
         const unsigned long root_size;
 
+        const Context context;
+
         inline const StoredPopulation& reference_data() const { return *(this->data); }
 
     private:
         std::unique_ptr<StoredPopulation> data;
-
-        const Context context;
 
         unsigned long uid_i;
 

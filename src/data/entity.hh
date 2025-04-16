@@ -12,7 +12,7 @@ namespace fargo
         unsigned long month_age;
         unsigned long month_revenue;
         unsigned long month_expense;
-        unsigned long total_savings;
+        long total_balance;
     };
 
     class EntityCollection

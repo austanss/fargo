@@ -23,7 +23,8 @@ int main(int argc, char** argv)
     std::cout << "\nControlled variables: \n";
     std::cout << "\tPopulation size: " << context.controls.pop_size;
     std::cout << "\n\tDuration (months): " << context.controls.max_months;
-    std::cout << "\n\tMonthly benefit: " << context.controls.monthly_benefit << std::endl << std::endl;
+    std::cout << "\n\tMonthly benefit: $" << context.controls.monthly_benefit;
+    std::cout << "\n\tAsset limit: $" << context.controls.asset_cutoff << std::endl << std::endl;
 
     std::unique_ptr<Simulation> sim = std::make_unique<Simulation>(context);
     sim->reset();
@@ -41,7 +42,7 @@ int main(int argc, char** argv)
         }
     }
 
-    Publisher(sim->read_population().reference_data())
+    Publisher(sim->read_population())
         .serialize_to_file(context.environment.output_path);
 
     return 0;

@@ -24,6 +24,7 @@ Response<void> Context::restore_defaults()
 
     this->controls.pop_size = 21;
     this->controls.monthly_benefit = 967;    // 2025 ssa.gov
+    this->controls.asset_cutoff = 2000;        // 2025 ssa.gov
     this->controls.max_months = 12;
 
     this->environment.output_path = "fargo.csv";
@@ -35,7 +36,7 @@ Response<void> Context::restore_defaults()
 static constexpr int SWITCH_DASHES = 1;
 static constexpr int VALUE_DASHES = 2;
 
-static constexpr long parameter_count = 8;
+static constexpr long parameter_count = 9;
 static std::string parameter_names[] = {
     "output",           //0
     "label",            //1
@@ -44,7 +45,8 @@ static std::string parameter_names[] = {
     "gradual",          //4
     "pop-size",         //5
     "monthly-benefit",  //6
-    "max-months"        //7
+    "max-months",        //7
+    "asset-cutoff"     //8
 };
 
 static long index_of_parameter(const std::string& parameter)
@@ -139,6 +141,9 @@ Response<void> Context::match_parameters_raw(int argc, char** argv)
                     break;
                 case 7:
                     this->controls.max_months = std::stoul(value.result);
+                    break;
+                case 8:
+                    this->controls.asset_cutoff = std::stoul(value.result);
                     break;
                 case 0:
                     this->environment.output_path = value.result;
