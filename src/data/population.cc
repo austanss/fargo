@@ -61,6 +61,11 @@ Response<void> Population::update()
     return Responses::flawless();
 }
 
+#define REAL_INCOME_MU 5295.0
+#define REAL_INCOME_SD 15590.0
+#define REAL_EXPENSE_MU 5200.0
+#define REAL_EXPENSE_SD 2400.0
+
 Response<void> Population::reset_population_data()
 {
     Status current_status = Status::FLAWLESS;
@@ -79,7 +84,7 @@ Response<void> Population::reset_population_data()
         this->data->entities->get_by_index(i).month_age = (12 * new_ages.generate(true));
     }
 
-    const Distribution income_distro = Distribution(5295.0, 15590.0); // pincs
+    const Distribution income_distro = Distribution(REAL_INCOME_MU, REAL_INCOME_SD); // pincs
     for (unsigned long i = 0; i < root_size; i++) {
         NormalRandom new_incomes = NormalRandom(income_distro);
         Entity& entity = this->data->entities->get_by_index(i);
@@ -87,7 +92,7 @@ Response<void> Population::reset_population_data()
     }
 
     // EXPENSES are extremely extremely extremely difficult to even begin to attempt to model
-    const Distribution expense_distro = Distribution(5200.0, 2400.0);
+    const Distribution expense_distro = Distribution(REAL_EXPENSE_MU, REAL_EXPENSE_SD);
     for (unsigned long i = 0; i < root_size; i++) {
         Entity& entity = this->data->entities->get_by_index(i);
 
@@ -102,9 +107,9 @@ Response<void> Population::reset_population_data()
 
         entity.month_expense = new_expenses.generate(true);
 
-//        while (entity_actual_income < entity.month_expense) {
-//            entity.month_expense = new_expenses.generate(true);
-//        }
+        while (entity_actual_income < entity.month_expense) {
+            entity.month_expense = new_expenses.generate(true);
+        }
     }
 
     current_status = this->data->summarize().status;
@@ -140,11 +145,21 @@ Response<void> Population::update_savings()
     {
         Entity& entity = this->data->entities->get_by_index(i);
 
-        unsigned long modulated_revenue = entity.month_revenue;
-
-        modulated_revenue += bureau.see_benefit(entity);
+        unsigned long modulated_revenue = entity.month_revenue + bureau.see_benefit(entity);
 
         entity.total_balance += (modulated_revenue - entity.month_expense);
+
+        if (entity.total_balance >= 0) continue;
+        // Bankruptcy?
+        constexpr long BANK_MODIFIER = 10;
+
+        long total_debt = -(entity.total_balance);
+        long debt_threshold = (entity.month_revenue * BANK_MODIFIER);
+        if (total_debt < debt_threshold) continue;
+        // Bankruptcy!
+
+        entity.month_expense -= ((entity.month_revenue + bureau.see_benefit(entity)) / BANK_MODIFIER);
+        entity.total_balance /= BANK_MODIFIER;
     }
 
     return Responses::flawless();
