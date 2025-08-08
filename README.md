@@ -8,5 +8,6 @@
 Fargo is a research model designed to simulate American social security policy and its macroeconomic outcomes in a reliably reproducible, digitized, and computational manner.
 
 ## Purpose
-**This model is being developed for ongoing academic purposes, and thus will take absolutely zero external feedback or contribution for the purposes of preserving academic integrity.**
+~~**This model is being developed for ongoing academic purposes, and thus will take absolutely zero external feedback or contribution for the purposes of preserving academic integrity.**~~
 
+*This model's purpose has long since been served, and there is no further application.*
